@@ -16,10 +16,10 @@ export async function createUser(
 }
 
 export async function validateUser(
-  username: string,
+  email: string,
   password: string
 ): Promise<Omit<UserDocument, "password"> | null> {
-  const user: UserDocument | null = await User.findOne({ username });
+  const user: UserDocument | null = await User.findOne({ email });
   if (!user) return null;
   const match: boolean = await user.comparePasswords(password);
   if (!match) return null;
