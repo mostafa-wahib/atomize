@@ -15,13 +15,10 @@ export async function createUser(
   }
 }
 
-export async function validateUser(
-  email: string,
-  password: string
-): Promise<Omit<UserDocument, "password"> | null> {
+export async function validateUser(email: string, password: string) {
   const user: UserDocument | null = await User.findOne({ email });
   if (!user) return null;
   const match: boolean = await user.comparePasswords(password);
   if (!match) return null;
-  return omit(user, "password");
+  return omit(user.toJSON(), "password");
 }
