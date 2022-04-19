@@ -1,9 +1,15 @@
 import { object, string } from "zod";
 export const createUrlSchema = object({
   body: object({
-    original: string({
+    url: string({
       required_error: "original url is required",
     }).url("Url is invalid"),
-    createdBy: string().optional(),
+    short: string().min(2).max(6).optional(),
+  }),
+});
+
+export const lookupUrlSchema = object({
+  params: object({
+    short: string().min(2).max(6),
   }),
 });

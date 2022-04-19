@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 const SALT_FACTOR: number = 10;
 export interface UserDocument extends mongoose.Document {
   email: string;
-  username: string;
   password: string;
   createdAt: string;
   updatedAt: string;
@@ -13,7 +12,6 @@ export interface UserDocument extends mongoose.Document {
 const UserSchema = new mongoose.Schema(
   {
     email: { type: String, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
   },
   { timestamps: true }

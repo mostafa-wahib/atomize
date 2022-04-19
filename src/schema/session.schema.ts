@@ -1,4 +1,3 @@
-import { type } from "os";
 import { object, string } from "zod";
 
 export const createSessionSchema = object({
