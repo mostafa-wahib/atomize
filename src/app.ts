@@ -4,14 +4,9 @@ import connect from "./utils/connect";
 import { config } from "dotenv";
 import routes from "./routes";
 import { deserializeUser } from "./middleware/deserializeUser";
-
-config();
-const app = express();
-const port: number = +(process.env.PORT || "1337");
-app.use(express.json());
-app.use(deserializeUser);
-
-routes(app);
+import server from "./utils/server";
+const app = server();
+const port = +(process.env.PORT || 1337);
 app.listen(port, () => {
   connect();
   logger.info(`Listening on port ${port} `);

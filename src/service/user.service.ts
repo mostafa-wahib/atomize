@@ -12,6 +12,7 @@ export async function createUser(
   >
 ) {
   try {
+    // console.log("user input: ", input);
     return await User.create(input);
   } catch (e: any) {
     throw new Error(e);

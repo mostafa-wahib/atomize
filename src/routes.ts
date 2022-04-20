@@ -34,11 +34,6 @@ function sessionRoutes(app: Express) {
 }
 
 function urlRoutes(app: Express) {
-  app.post(
-    "/api/url/shorten",
-    deserializeUser,
-    createUrlValidator,
-    shortenUrlHandler
-  );
+  app.post("/api/url/shorten", createUrlValidator, shortenUrlHandler);
   app.get("/:short", lookupUrlValidator, lookupHandler);
 }
