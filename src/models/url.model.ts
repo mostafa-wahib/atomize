@@ -28,9 +28,11 @@ UrlSchema.pre("save", async function (next) {
   while (true) {
     let urlDoc = await model.findOne({ short });
     if (!urlDoc) break;
+    if (urlDoc.createdBy) next(new Error("Short id already exists"));
     short = nanoid();
   }
   url.short = short;
+  next();
 });
 const model = mongoose.model("UrlModel", UrlSchema);
 

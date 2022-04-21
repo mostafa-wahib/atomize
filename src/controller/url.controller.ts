@@ -1,8 +1,13 @@
 import logger from "../utils/logger";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
 import { lookup, shortenUrl } from "../service/url.service";
-export async function shortenUrlHandler(req: Request, res: Response) {
+import { nextTick } from "process";
+export async function shortenUrlHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const email = get(res, "locals.user.email", null);
   const customShort = email && req.body.short ? req.body.short : null;
   let urlData = {
@@ -14,6 +19,7 @@ export async function shortenUrlHandler(req: Request, res: Response) {
     const short = await shortenUrl(urlData);
     res.json({ short });
   } catch (err: any) {
+    if (err.message === "Short id already exists") return res.sendStatus(409);
     logger.error("Failed to Shorten Url: : ", err.msg);
     res.sendStatus(422);
   }
