@@ -12,6 +12,7 @@ import validate from "./middleware/validateResource";
 import { createSessionSchema } from "./schema/session.schema";
 import { createUrlSchema, lookupUrlSchema } from "./schema/url.schema";
 import { createUserSchema } from "./schema/user.schema";
+import { emailExists } from "./middleware/emailExists";
 const registerValidator = validate(createUserSchema);
 const sessionValidator = validate(createSessionSchema);
 const createUrlValidator = validate(createUrlSchema);
@@ -24,7 +25,7 @@ export default function (app: Express) {
 }
 
 function userRoutes(app: Express) {
-  app.post("/api/users", registerValidator, createUserHandler);
+  app.post("/api/users", registerValidator, emailExists, createUserHandler);
 }
 
 function sessionRoutes(app: Express) {

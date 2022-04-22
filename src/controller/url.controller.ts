@@ -2,7 +2,6 @@ import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
 import { lookup, shortenUrl } from "../service/url.service";
-import { nextTick } from "process";
 export async function shortenUrlHandler(
   req: Request,
   res: Response,
