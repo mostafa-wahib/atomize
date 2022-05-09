@@ -3,7 +3,6 @@ import server from "../utils/server";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import { createUser } from "../service/user.service";
-import { send } from "process";
 const app = server();
 const user = {
   email: "melba.hagenes@example.com",
