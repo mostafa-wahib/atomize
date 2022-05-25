@@ -9,7 +9,7 @@ services:
         target: /app/src
   mongodb:
     image: 'mongo'
-      #volumes:
-      #- data:/data/db
-      #volumes:
-      #data:
+    volumes:
+      - data:/data/db
+volumes:
+  data:
