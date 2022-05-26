@@ -10,7 +10,13 @@ export async function createUserHandler(
     await createUser(req.body);
     res.sendStatus(200);
   } catch (e: any) {
-    logger.error(e.message);
-    res.sendStatus(409);
+    switch (e.code) {
+      case 11000:
+        res.sendStatus(409);
+        break;
+      default:
+        logger.error(e.message);
+        res.sendStatus(500);
+    }
   }
 }

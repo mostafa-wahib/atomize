@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import logger from "./logger";
@@ -7,7 +6,8 @@ export default async () => {
     ? `.env.${process.env.NODE_END}`
     : ".env";
   config({ path: envFile });
-  const dbUri: string = process.env.URI || "mongodb://localhost:27017/test";
+  const dbUri: string = process.env.URI || "mongodb://mongodb:27017/test";
+  logger.info(`dburi: ${dbUri} `);
   try {
     await mongoose.connect(dbUri);
     logger.info("Connected to database...");
