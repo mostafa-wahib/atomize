@@ -22,17 +22,17 @@ describe("user", () => {
   describe("register user route", () => {
     describe("given valid fields", () => {
       it("should return 200", async () => {
-        await supertest(app).post("/api/users").send(user).expect(200);
+        await supertest(app).post("/v1/users").send(user).expect(200);
       });
     });
     describe("given missing fields", () => {
       it("should return 400", async () => {
-        await supertest(app).post("/api/users").send({}).expect(400);
+        await supertest(app).post("/v1/users").send({}).expect(400);
       });
     });
     describe("given email that already exists", () => {
       it("should return 409", async () => {
-        await supertest(app).post("/api/users").send(user).expect(409);
+        await supertest(app).post("/v1/users").send(user).expect(409);
       });
     });
   });

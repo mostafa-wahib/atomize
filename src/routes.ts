@@ -18,17 +18,19 @@ const createUrlValidator = validate(createUrlSchema);
 const lookupUrlValidator = validate(lookupUrlSchema);
 export default function (app: Express) {
   /**
-   * @openapi
-   * /heartbeat:
+   * @openv1
+   * /v1/healthcheck:
    *  get:
    *   tag:
    *   - Healthcheck
    *   description: Responds if the app is running
    *   responses:
    *    200:
-   *      description: API is currently running
+   *      description: server is currently running
    */
-  app.get("/heartbeat", (req: Request, res: Response) => res.sendStatus(200));
+  app.get("/v1/healthcheck", (req: Request, res: Response) =>
+    res.sendStatus(200)
+  );
   userRoutes(app);
   sessionRoutes(app);
   urlRoutes(app);
@@ -36,8 +38,8 @@ export default function (app: Express) {
 
 function userRoutes(app: Express) {
   /**
-   * @openapi
-   * /api/users:
+   * @openv1
+   * /v1/users:
    *  post:
    *   tag:
    *    - Users
@@ -56,15 +58,15 @@ function userRoutes(app: Express) {
    *    400:
    *     description: Bad request
    */
-  app.post("/api/users", registerValidator, emailExists, createUserHandler);
+  app.post("/v1/users", registerValidator, emailExists, createUserHandler);
 }
 function sessionRoutes(app: Express) {
-  app.post("/api/sessions", sessionValidator, createSessionHandler);
-  app.get("/api/sessions", userExists, getUserSessions);
-  app.delete("/api/sessions", userExists, deleteSessionHandler);
+  app.post("/v1/sessions", sessionValidator, createSessionHandler);
+  app.get("/v1/sessions", userExists, getUserSessions);
+  app.delete("/v1/sessions", userExists, deleteSessionHandler);
 }
 
 function urlRoutes(app: Express) {
-  app.post("/api/url/shorten", createUrlValidator, shortenUrlHandler);
+  app.post("/v1/url/shorten", createUrlValidator, shortenUrlHandler);
   app.get("/:short", lookupUrlValidator, lookupHandler);
 }
