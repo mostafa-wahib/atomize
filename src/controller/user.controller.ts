@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import logger from "../utils/logger";
 import { createUser } from "../service/user.service";
 import { CreateUserInput } from "../schema/user.schema";
+enum UserErrors {
+  UserExists = 11000,
+}
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput["body"]>,
   res: Response
@@ -11,7 +14,7 @@ export async function createUserHandler(
     res.sendStatus(200);
   } catch (e: any) {
     switch (e.code) {
-      case 11000:
+      case UserErrors.UserExists:
         res.sendStatus(409);
         break;
       default:

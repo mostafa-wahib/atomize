@@ -15,6 +15,11 @@ export interface UrlData {
   short?: string;
   createdBy?: string;
 }
+export class ConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
 const UrlSchema = new mongoose.Schema<UrlDocument>({
   short: { type: String, unique: true, default: () => nanoid() },
   original: { type: String, required: true },
@@ -28,7 +33,7 @@ UrlSchema.pre("save", async function (next) {
   while (true) {
     let urlDoc = await model.findOne({ short });
     if (!urlDoc) break;
-    if (urlDoc.createdBy) next(new Error("Short id already exists"));
+    if (urlDoc.createdBy) next(new ConflictError("Short id already exists"));
     short = nanoid();
   }
   url.short = short;

@@ -2,6 +2,7 @@ import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
 import { lookup, shortenUrl } from "../service/url.service";
+import { ConflictError } from "../models/url.model";
 export async function shortenUrlHandler(
   req: Request,
   res: Response,
@@ -18,9 +19,13 @@ export async function shortenUrlHandler(
     const short = await shortenUrl(urlData);
     res.json({ short });
   } catch (err: any) {
-    if (err.message === "Short id already exists") return res.sendStatus(409);
-    logger.error("Failed to Shorten Url: : ", err.msg);
-    res.sendStatus(422);
+    switch (err.constructor) {
+      case ConflictError:
+        return res.sendStatus(409);
+      default:
+        logger.error("Failed to Shorten Url: : ", err.msg);
+        res.sendStatus(422);
+    }
   }
 }
 export async function lookupHandler(req: Request, res: Response) {
