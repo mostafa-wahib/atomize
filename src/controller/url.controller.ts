@@ -1,7 +1,7 @@
 import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
-import { lookup, shortenUrl } from "../service/url.service";
+import { lookup, shortenUrl, userUrlLookup } from "../service/url.service";
 import { ConflictError } from "../models/url.model";
 export async function shortenUrlHandler(
   req: Request,
@@ -32,4 +32,14 @@ export async function lookupHandler(req: Request, res: Response) {
   const original = await lookup(req.params.short);
   if (!original) return res.sendStatus(404);
   res.redirect(original);
+}
+export async function userUrlLookupHandler(req: Request, res: Response) {
+  const email = get(res, "locals.user.email", null);
+  try {
+    const urls = await userUrlLookup(email);
+    res.status(200).json(urls);
+  } catch (err: any) {
+    logger.error("Failed to retrieve urls for user: ", email);
+    res.sendStatus(422);
+  }
 }

@@ -11,3 +11,7 @@ export async function lookup(short: string): Promise<string | null> {
   const url = await Url.findOne({ short });
   return get(url, "original", null);
 }
+export async function userUrlLookup(email: string): Promise<UrlData[] | null> {
+  const urls = await Url.find({ createdBy: email });
+  return urls;
+}

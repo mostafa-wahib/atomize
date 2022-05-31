@@ -12,6 +12,7 @@ import { createSessionSchema } from "./schema/session.schema";
 import { createUrlSchema, lookupUrlSchema } from "./schema/url.schema";
 import { createUserSchema } from "./schema/user.schema";
 import { emailExists } from "./middleware/emailExists";
+import { deserializeUser } from "./middleware/deserializeUser";
 const registerValidator = validate(createUserSchema);
 const sessionValidator = validate(createSessionSchema);
 const createUrlValidator = validate(createUrlSchema);
@@ -69,4 +70,5 @@ function sessionRoutes(app: Express) {
 function urlRoutes(app: Express) {
   app.post("/v1/url/shorten", createUrlValidator, shortenUrlHandler);
   app.get("/:short", lookupUrlValidator, lookupHandler);
+  app.get("/v1/urls", deserializeUser, userExists);
 }

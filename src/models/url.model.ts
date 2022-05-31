@@ -26,7 +26,7 @@ const UrlSchema = new mongoose.Schema<UrlDocument>({
   createdBy: { type: String, default: null },
 });
 
-UrlSchema.pre("save", async function (next) {
+UrlSchema.pre("save", async function (next: any) {
   const url = this;
   let short = url.short;
   //loop until unused shortid is found
