@@ -36,4 +36,18 @@ describe("user", () => {
       });
     });
   });
+  describe("login", () => {
+    describe("given valid credentials", () => {
+      it("should return 200 with an access and refresh token", async () => {
+        await supertest(app)
+          .post("/v1/sessions")
+          .send({ email: user.email, password: user.password })
+          .expect(200)
+          .then((res) => {
+            expect(res.body).toHaveProperty("accessToken");
+            expect(res.body).toHaveProperty("refreshToken");
+          });
+      });
+    });
+  });
 });
