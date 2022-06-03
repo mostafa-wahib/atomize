@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import logger from "./logger";
+import { createClient } from "redis";
+
 export default async () => {
   const envFile = process.env.NODE_ENV
     ? `.env.${process.env.NODE_END}`
@@ -14,5 +16,18 @@ export default async () => {
   } catch (e) {
     logger.fatal("Database connection failed. Exiting...");
     process.exit(1);
+  }
+};
+export const redisConnect = async (): Promise<any | null> => {
+  try {
+    const client = createClient({
+      url: process.env.redisuri || "redis://cache:6379",
+    });
+    await client.connect();
+    logger.info("Connected to cache...");
+    return client;
+  } catch (err: any) {
+    logger.fatal(`Failed to connect to redis server with reason:${err} `);
+    return null;
   }
 };

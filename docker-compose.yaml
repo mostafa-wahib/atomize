@@ -1,4 +1,16 @@
 services:
+  mongodb:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+  cache:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning 
+    volumes: 
+      - cache:/data
   backend:
     build: ./
     ports: 
@@ -7,9 +19,9 @@ services:
       - type: bind
         source: ./src
         target: /app/src
-  mongodb:
-    image: 'mongo'
-    volumes:
-      - data:/data/db
+    depends_on:
+      - mongodb
+      - cache
 volumes:
   data:
+  cache:
