@@ -6,8 +6,9 @@ import routes from "../routes";
 import swaggerDocs from "../utils/swagger";
 export default function () {
   const envFile = process.env.NODE_ENV
-    ? `.env.${process.env.NODE_END}`
+    ? `.env.${process.env.NODE_ENV}`
     : ".env";
+  console.log("env: ", envFile);
   config({ path: envFile });
   const app = express();
   app.use(cors());

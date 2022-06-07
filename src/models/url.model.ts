@@ -27,7 +27,6 @@ const UrlSchema = new mongoose.Schema<UrlDocument>({
   original: { type: String, required: true },
   createdBy: { type: String, default: null },
 });
-
 UrlSchema.pre("save", async function (next: any) {
   const url = this;
   let short = url.short;
@@ -42,5 +41,4 @@ UrlSchema.pre("save", async function (next: any) {
   next();
 });
 const model = mongoose.model("UrlModel", UrlSchema);
-
 export default model;

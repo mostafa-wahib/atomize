@@ -3,11 +3,9 @@ import { config } from "dotenv";
 import logger from "./logger";
 import { createClient } from "redis";
 
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
+config({ path: envFile });
 export default async () => {
-  const envFile = process.env.NODE_ENV
-    ? `.env.${process.env.NODE_END}`
-    : ".env";
-  config({ path: envFile });
   const dbUri: string = process.env.URI || "mongodb://mongodb:27017/test";
   logger.info(`dburi: ${dbUri} `);
   try {
@@ -19,15 +17,17 @@ export default async () => {
   }
 };
 export const redisConnect = async (): Promise<any | null> => {
+  const url = process.env.redisuri || "redis://cache:6379";
   try {
     const client = createClient({
-      url: process.env.redisuri || "redis://cache:6379",
+      url: url,
     });
     await client.connect();
-    logger.info("Connected to cache...");
+    logger.info("Connected to redis...");
     return client;
   } catch (err: any) {
-    logger.fatal(`Failed to connect to redis server with reason:${err} `);
+    logger.fatal(`Failed to connect to redis server with reason:${err}... `);
+    logger.fatal(`${url} was a dud!`);
     return null;
   }
 };

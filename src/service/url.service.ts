@@ -18,7 +18,6 @@ export async function lookup(short: string): Promise<string | null> {
     url = await client.get(short);
   } catch (err: any) {
     logger.error(`Could not get url from cache with reason: ${err} `);
-    console.log(err);
   }
   if (url) return url;
   url = await Url.findOne({ short });

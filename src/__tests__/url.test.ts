@@ -3,24 +3,38 @@ import server from "../utils/server";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 const app = server();
-const user = {
+interface UserData {
+  email: string;
+  password: string;
+  confirmPassword?: string;
+  accessToken?: string;
+  refreshToken?: string;
+}
+const user: UserData = {
   email: "melba.hagenes@example.com",
   password: "a54Bedv923W1Oqv",
   confirmPassword: "a54Bedv923W1Oqv",
 };
 let short: string | null;
-
 describe("url", () => {
   beforeAll(async () => {
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
+    await supertest(app).post("/v1/users").send(user);
+    await supertest(app)
+      .post("/v1/sessions")
+      .send({ email: user.email, password: user.password })
+      .then((res) => {
+        user.accessToken = res.body.accessToken;
+        user.accessToken = res.body.accessToken;
+      });
   });
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
   });
   describe("shorten a url", () => {
-    describe("given that a valid url", () => {
+    describe("given a valid url", () => {
       it("should return 200 with a shord ID", async () => {
         await supertest(app)
           .post(`/v1/url/shorten`)
@@ -37,6 +51,22 @@ describe("url", () => {
           .post("/v1/url/shorten")
           .send({ url: "invalidurl" })
           .expect(400);
+      });
+    });
+    describe("given a custom short and active session", () => {
+      it("should return 200 and the provided custom short", async () => {
+        await supertest(app)
+          .post("/v1/url/shorten")
+          .send({
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+            url: "https://google.com",
+            short: "custom",
+          })
+          .expect(200)
+          .then((res) => {
+            expect(res.body).toHaveProperty("short");
+          });
       });
     });
   });
