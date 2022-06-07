@@ -13,7 +13,8 @@ export async function shortenUrlHandler(
   let urlData = {
     original: req.body.url,
     createdBy: email || null,
-    ...(customShort ? { short: customShort } : {}),
+    custom: false,
+    ...(customShort ? { short: customShort, custom: true } : {}),
   };
   try {
     const short = await shortenUrl(urlData);

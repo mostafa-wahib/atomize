@@ -4,7 +4,7 @@ export const createUrlSchema = object({
     url: string({
       required_error: "original url is required",
     }).url("Url is invalid"),
-    short: string().min(2).max(6).optional(),
+    short: string().min(3).max(8).optional(),
   }),
 });
 

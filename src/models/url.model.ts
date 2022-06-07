@@ -1,20 +1,22 @@
 import mongoose from "mongoose";
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("1234567890abcdef", 6);
-
+interface Referers {
+  [referer: string]: number;
+}
 export interface UrlDocument extends mongoose.Document {
   short: string;
   original: string;
+  referers: Referers;
+  custom: boolean;
   createdAt: string;
   updatedAt: string | null;
   createdBy?: string;
 }
 
-export interface UrlData {
-  original: string;
-  short?: string;
-  createdBy?: string;
-}
+export type UrlData =
+  | Pick<UrlDocument, "original" | "custom">
+  | Partial<Omit<UrlDocument, "createdAt" | "updatedAt">>;
 export class ConflictError extends Error {
   constructor(message: string) {
     super(message);
@@ -33,7 +35,7 @@ UrlSchema.pre("save", async function (next: any) {
   while (true) {
     let urlDoc = await model.findOne({ short });
     if (!urlDoc) break;
-    if (urlDoc.createdBy) next(new ConflictError("Short id already exists"));
+    if (urlDoc.custom) next(new ConflictError("Short id already exists"));
     short = nanoid();
   }
   url.short = short;

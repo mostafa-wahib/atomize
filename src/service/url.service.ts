@@ -34,3 +34,7 @@ export async function userUrlLookup(email: string): Promise<UrlData[] | null> {
   const urls = await Url.find({ createdBy: email });
   return urls;
 }
+
+export async function updateReferer(short: string) {
+  return;
+}
