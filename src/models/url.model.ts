@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { DocumentDefinition } from "mongoose";
 import { customAlphabet } from "nanoid";
 const nanoid = customAlphabet("1234567890abcdef", 6);
-interface Referers {
+interface Referrers {
   [referer: string]: number;
 }
 export interface UrlDocument extends mongoose.Document {
   short: string;
   original: string;
-  referers: Referers;
+  referrers: Referrers;
   custom: boolean;
   createdAt: string;
   updatedAt: string | null;
@@ -16,7 +16,7 @@ export interface UrlDocument extends mongoose.Document {
 
 export type UrlData =
   | Pick<UrlDocument, "original" | "custom">
-  | Partial<Omit<UrlDocument, "createdAt" | "updatedAt">>;
+  | Partial<Omit<DocumentDefinition<UrlDocument>, "createdAt" | "updatedAt">>;
 export class ConflictError extends Error {
   constructor(message: string) {
     super(message);
@@ -25,6 +25,8 @@ export class ConflictError extends Error {
 const UrlSchema = new mongoose.Schema<UrlDocument>({
   short: { type: String, unique: true, default: () => nanoid() },
   original: { type: String, required: true },
+  referrers: { type: Map, of: Number },
+  custom: { type: Boolean, default: false },
   createdBy: { type: String, default: null },
 });
 UrlSchema.pre("save", async function (next: any) {

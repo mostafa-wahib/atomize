@@ -10,6 +10,6 @@ export const createUrlSchema = object({
 
 export const lookupUrlSchema = object({
   params: object({
-    short: string().min(2).max(6),
+    short: string().min(3).max(8),
   }),
 });

@@ -4,7 +4,11 @@ import {
   deleteSessionHandler,
   getUserSessions,
 } from "./controller/session.controller";
-import { lookupHandler, shortenUrlHandler } from "./controller/url.controller";
+import {
+  lookupHandler,
+  shortenUrlHandler,
+  userUrlLookupHandler,
+} from "./controller/url.controller";
 import { createUserHandler } from "./controller/user.controller";
 import { userExists } from "./middleware/userExists";
 import validate from "./middleware/validateResource";
@@ -70,5 +74,5 @@ function sessionRoutes(app: Express) {
 function urlRoutes(app: Express) {
   app.post("/v1/url/shorten", createUrlValidator, shortenUrlHandler);
   app.get("/:short", lookupUrlValidator, lookupHandler);
-  app.get("/v1/urls", deserializeUser, userExists);
+  app.get("/v1/urls", deserializeUser, userExists, userUrlLookupHandler);
 }

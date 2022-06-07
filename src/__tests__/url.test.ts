@@ -6,27 +6,30 @@ const app = server();
 interface UserData {
   email: string;
   password: string;
-  confirmPassword?: string;
+  passwordConfirmation?: string;
   accessToken?: string;
   refreshToken?: string;
 }
 const user: UserData = {
   email: "melba.hagenes@example.com",
   password: "a54Bedv923W1Oqv",
-  confirmPassword: "a54Bedv923W1Oqv",
+  passwordConfirmation: "a54Bedv923W1Oqv",
 };
 let short: string | null;
 describe("url", () => {
   beforeAll(async () => {
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
-    await supertest(app).post("/v1/users").send(user);
+    await supertest(app).post("/v1/users").send(user).expect(200);
     await supertest(app)
       .post("/v1/sessions")
       .send({ email: user.email, password: user.password })
+      .expect(200)
       .then((res) => {
+        expect(res.body).toHaveProperty("accessToken");
+        expect(res.body).toHaveProperty("refreshToken");
         user.accessToken = res.body.accessToken;
-        user.accessToken = res.body.accessToken;
+        user.refreshToken = res.body.refreshToken;
       });
   });
   afterAll(async () => {
@@ -53,10 +56,14 @@ describe("url", () => {
           .expect(400);
       });
     });
-    describe("given a custom short and active session", () => {
+    describe("given a custom short and an active session", () => {
       it("should return 200 and the provided custom short", async () => {
         await supertest(app)
           .post("/v1/url/shorten")
+          .set({
+            Authorization: `Bearer ${user.accessToken}`,
+            "x-refresh": user.refreshToken,
+          })
           .send({
             accessToken: user.accessToken,
             refreshToken: user.refreshToken,
@@ -80,6 +87,21 @@ describe("url", () => {
     describe("given a short ID that exists", () => {
       it("should return 301", async () => {
         await supertest(app).get(`/${short}`).expect(302);
+      });
+    });
+    describe("all urls shortened by owner of current session", () => {
+      it("should return 200 and a list of urls", async () => {
+        await supertest(app)
+          .get(`/v1/urls`)
+          .set({
+            Authorization: `Bearer ${user.accessToken}`,
+            "x-refresh": user.refreshToken,
+          })
+          .expect(200)
+          .then((res) => {
+            expect(res.body).toHaveProperty("urls");
+            console.log(JSON.stringify(res.body));
+          });
       });
     });
   });

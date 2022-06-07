@@ -1,11 +1,11 @@
-import Url, { UrlData } from "../models/url.model";
+import Url, { UrlData, UrlDocument } from "../models/url.model";
 import { redisConnect } from "../utils/connect";
 import logger from "../utils/logger";
+import { DocumentDefinition } from "mongoose";
 let client: any = null;
 (async () => {
   client = await redisConnect();
 })();
-
 export async function shortenUrl(urlData: UrlData): Promise<string> {
   const url = new Url(urlData);
   await url.save();
@@ -29,11 +29,20 @@ export async function lookup(short: string): Promise<string | null> {
   }
   return url.original;
 }
-export async function userUrlLookup(email: string): Promise<UrlData[] | null> {
+export async function userUrlLookup(
+  email: string
+): Promise<DocumentDefinition<UrlDocument>[]> {
   const urls = await Url.find({ createdBy: email });
   return urls;
 }
 
-export async function updateReferer(short: string) {
-  return;
+export async function updateReferrer(short: string, referrer: string) {
+  await Url.findOneAndUpdate(
+    { short },
+    {
+      $inc: {
+        [`referrers.${referrer}`]: 1,
+      },
+    }
+  );
 }
