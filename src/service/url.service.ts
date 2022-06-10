@@ -39,7 +39,7 @@ export async function updateReferrer(short: string, referrer: string) {
   try {
     const result = await Url.findOneAndUpdate(
       { short },
-      { $inc: { [`referrers.${referrer.replace(/\./g, "\uff0E")}`]: 1 } }
+      { $inc: { [`referrers.${referrer}`]: 1 } }
     );
     return result?.toObject();
   } catch (err: any) {
