@@ -24,7 +24,6 @@ export async function deserializeUser(
     if (newAccessToken) {
       res.setHeader("x-access-token", newAccessToken);
       const verifiedAccessToken = verifyJwt(newAccessToken);
-      console.log("token ", verifiedAccessToken);
       res.locals.user = verifiedAccessToken.decoded;
     }
   }

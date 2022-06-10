@@ -34,6 +34,5 @@ export async function getUserSessions(req: Request, res: Response) {
 
 export async function deleteSessionHandler(req: Request, res: Response) {
   const result = await deleteSession({ _id: res.locals.user.session });
-  console.log("result ", result);
   res.sendStatus(200);
 }

@@ -35,14 +35,14 @@ export async function userUrlLookup(
   const urls = await Url.find({ createdBy: email });
   return urls;
 }
-
 export async function updateReferrer(short: string, referrer: string) {
-  await Url.findOneAndUpdate(
-    { short },
-    {
-      $inc: {
-        [`referrers.${referrer}`]: 1,
-      },
-    }
-  );
+  try {
+    const result = await Url.findOneAndUpdate(
+      { short },
+      { $inc: { [`referrers.${referrer.replace(/\./g, "\uff0E")}`]: 1 } }
+    );
+    return result?.toObject();
+  } catch (err: any) {
+    logger.error(`Could not update referrer with error: ${err}`);
+  }
 }
