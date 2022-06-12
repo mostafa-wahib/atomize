@@ -100,7 +100,6 @@ describe("url", () => {
           .expect(200)
           .then((res) => {
             expect(res.body).toHaveProperty("urls");
-            console.log(JSON.stringify(res.body));
           });
       });
     });

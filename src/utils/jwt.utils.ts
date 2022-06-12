@@ -3,7 +3,6 @@ import { config } from "dotenv";
 config();
 export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
   if (!process.env.PRIVATEKEY) throw new Error("Private key is not set");
-  //   console.log(object);
   return jwt.sign(object, process.env.PRIVATEKEY, {
     ...options,
     algorithm: "RS256",

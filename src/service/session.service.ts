@@ -2,7 +2,6 @@ import Session, { SessionDocument } from "../models/session.model";
 import { FilterQuery } from "mongoose";
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import { get } from "lodash";
-import User from "../models/user.model";
 import { getUser } from "./user.service";
 import { config } from "dotenv";
 config();

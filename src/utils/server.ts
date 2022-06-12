@@ -8,7 +8,6 @@ export default function () {
   const envFile = process.env.NODE_ENV
     ? `.env.${process.env.NODE_ENV}`
     : ".env";
-  console.log("env: ", envFile);
   config({ path: envFile });
   const app = express();
   app.use(cors());
