@@ -2,14 +2,26 @@ import Url, { UrlData, UrlDocument } from "../models/url.model";
 import { redisConnect } from "../utils/connect";
 import logger from "../utils/logger";
 import { DocumentDefinition } from "mongoose";
+import { customAlphabet } from "nanoid";
+import { ConflictError } from "../utils/errors";
+const nanoid = customAlphabet("1234567890abcdef", 6);
 let client: any = null;
 (async () => {
   client = await redisConnect();
 })();
 export async function shortenUrl(urlData: UrlData): Promise<string> {
   const url = new Url(urlData);
-  await url.save();
-  return url.short;
+  while (true) {
+    try {
+      url.short = nanoid();
+      await url.save();
+      return url.short;
+    } catch (err: any) {
+      if (err.code === 11000) {
+        if (url.custom) throw new ConflictError("Short id already exists");
+      }
+    }
+  }
 }
 
 export async function lookup(short: string): Promise<string | null> {

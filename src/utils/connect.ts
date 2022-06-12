@@ -27,7 +27,6 @@ export const redisConnect = async (): Promise<any | null> => {
     return client;
   } catch (err: any) {
     logger.fatal(`Failed to connect to redis server with reason:${err}... `);
-    logger.fatal(`${url} was a dud!`);
     return null;
   }
 };

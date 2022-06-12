@@ -7,7 +7,7 @@ import {
   updateReferrer,
   userUrlLookup,
 } from "../service/url.service";
-import { ConflictError } from "../models/url.model";
+import { ConflictError } from "../utils/errors";
 export async function shortenUrlHandler(
   req: Request,
   res: Response,
