@@ -1,5 +1,6 @@
-![_local_image_banner](https://user-images.githubusercontent.com/97390127/173237385-f8bd29b2-0c5e-4994-add2-a8dced378f24.png)
-![GitHub last commit](https://img.shields.io/github/last-commit/mostafa-wahib/atomize)
+
+![GitHub last![banner](https://user-images.githubusercontent.com/97390127/173239296-ac9e4a9c-5a1a-441c-b14e-c4bcf23351bb.png)
+ commit](https://img.shields.io/github/last-commit/mostafa-wahib/atomize)
 Atomize is a quick and modern URL shortener. It enables you to host your own URL Shortener, brand your urls, analyze your shortened links performance, and much more!
 
 ### Technologies
