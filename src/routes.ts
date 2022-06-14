@@ -74,5 +74,5 @@ function sessionRoutes(app: Express) {
 function urlRoutes(app: Express) {
   app.post("/v1/url/shorten", createUrlValidator, shortenUrlHandler);
   app.get("/:short", lookupUrlValidator, lookupHandler);
-  app.get("/v1/urls", deserializeUser, userExists, userUrlLookupHandler);
+  app.get("/v1/urls", userExists, userUrlLookupHandler);
 }
