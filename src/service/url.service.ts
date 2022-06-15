@@ -11,15 +11,24 @@ let client: any = null;
 })();
 export async function shortenUrl(urlData: UrlData): Promise<string> {
   const url = new Url(urlData);
+  try {
+    if (url.custom) {
+      await url.save();
+      return url.short;
+    }
+  } catch (err: any) {
+    if (err.code === 11000) {
+      if (url.custom) throw new ConflictError("Short id already exists");
+    }
+  }
   while (true) {
     try {
       url.short = nanoid();
       await url.save();
       return url.short;
     } catch (err: any) {
-      if (err.code === 11000) {
-        if (url.custom) throw new ConflictError("Short id already exists");
-      }
+      if (err.code !== 11000) throw new Error("Server error");
+      logger.info("Attempting to find unique short...");
     }
   }
 }

@@ -73,6 +73,7 @@ describe("url", () => {
           .expect(200)
           .then((res) => {
             expect(res.body).toHaveProperty("short");
+            expect(res.body.short).toEqual("custom");
           });
       });
     });
