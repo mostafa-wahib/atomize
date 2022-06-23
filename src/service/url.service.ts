@@ -4,7 +4,10 @@ import logger from "../utils/logger";
 import { DocumentDefinition } from "mongoose";
 import { customAlphabet } from "nanoid";
 import { ConflictError } from "../utils/errors";
-const nanoid = customAlphabet("1234567890abcdef", 6);
+const nanoid = customAlphabet(
+  "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  6
+);
 let client: any = null;
 (async () => {
   client = await redisConnect();

@@ -10,14 +10,16 @@ export default function () {
     ? `.env.${process.env.NODE_ENV}`
     : ".env";
   config({ path: envFile });
-  const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 150, // Limit each IP to 150 requests per `window` (here, per 10 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  });
+  const limiter =
+    process.env.LIMITER &&
+    rateLimit({
+      windowMs: 10 * 60 * 1000, // 10 minutes
+      max: 150, // Limit each IP to 150 requests per `window` (here, per 10 minutes)
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    });
   const app = express();
-  app.use(limiter);
+  if (limiter) app.use(limiter);
   app.use(cors());
   app.use(express.json());
   app.use(deserializeUser);
