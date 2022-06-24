@@ -7,7 +7,6 @@ const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
 config({ path: envFile });
 export default async () => {
   const dbUri: string = process.env.URI || "mongodb://mongodb:27017/test";
-  logger.info(`dburi: ${dbUri} `);
   try {
     await mongoose.connect(dbUri);
     logger.info("Connected to database...");
@@ -27,6 +26,5 @@ export const redisConnect = async (): Promise<any | null> => {
     return client;
   } catch (err: any) {
     logger.fatal(`Failed to connect to redis server with reason:${err}... `);
-    return null;
   }
 };
